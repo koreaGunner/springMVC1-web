@@ -23,7 +23,7 @@ public class ItemRepository {
         return store.get(id);
     }
 
-    public List<Item> findALl() {
+    public List<Item> findAll() {
         return new ArrayList<>(store.values());
     }
 
