@@ -7,10 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -47,9 +44,55 @@ public class BasicItemController {
         return "basic/addForm";
     }
 
-    @PostMapping("/add")
-    public String save() {
-        return "xxx";
+//    @PostMapping("/add")
+    public String addItemV1(@RequestParam String itemName,
+                       @RequestParam int price,
+                       @RequestParam Integer quantity,
+                       Model model) {
+        Item item = new Item(itemName, price, quantity);
+
+        itemRepository.save(item);
+
+        model.addAttribute("item", item);
+
+        return "basic/item";
+    }
+
+//    @PostMapping("/add") //model도 생략가능
+    public String addItemV2(@ModelAttribute("item") Item item/*, Model model*/) {
+        
+        //item객체에 알아서 setter로 데이터를 넣어준다
+        itemRepository.save(item);
+        
+        //주석 처리해도 가능하다
+        //-> @ModelAttribute는 파라미터로 받아서 setter로 데이터를 넣어주는 것과
+        //   model.addAttribute도 같이 진행한다
+//        model.addAttribute("item", item);
+
+        return "basic/item";
+    }
+
+//    @PostMapping("/add") //model도 생략가능
+    public String addItemV3(@ModelAttribute Item item) {
+
+        itemRepository.save(item);
+
+        //@ModelAttribute에 name 부분을 생략해도 가능하다
+        // 디폴트 룰이 존재한다
+        //객체의 제일 앞의 대문자를 소문자 처리한다. Item -> item
+//        model.addAttribute("item", item);
+
+        return "basic/item";
+    }
+
+    @PostMapping("/add") //@ModelAttribute도 생략가능
+    public String addItemV4(Item item) {
+
+        itemRepository.save(item);
+
+//        model.addAttribute("item", item);
+
+        return "basic/item";
     }
 
     /**
